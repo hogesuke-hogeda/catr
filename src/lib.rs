@@ -78,22 +78,26 @@ pub fn run(config: Config) -> MyResult<()> {
                 for (line_index, line) in file.lines().enumerate() {
                     let line = line?;
 
-                    // 与えられたオプションによって処理を分岐
-                    // number_lines => 行番号を表示 *空行も含め附番*
-                    // number_nonblank_lines => *空行ではない行に附番*
-                    // オプションが無し => 行番号は表示せず、行の文字列をそのまま表示
+                    // 与えられたオプションによって処理を分岐する
+                    // 行番号を表示 *空行も含め附番*
                     if config.number_lines {
                         println!("{:>6}\t{}", line_index + 1, line);
-                    } else if config.number_nonblank_lines {
+                        continue;
+                    }
+
+                    // number_nonblank_lines => *空行ではない行に附番*
+                    if config.number_nonblank_lines {
                         if !line.is_empty() {
                             current_nonblank_line_num += 1;
                             println!("{:>6}\t{}", current_nonblank_line_num, line);
                         } else {
                             println!();
                         }
-                    } else {
-                        println!("{}", line);
+                        continue;
                     }
+
+                    // オプションが無し => 行番号は表示せず、行の文字列をそのまま表示
+                    println!("{}", line);
                 }
             }
         }
